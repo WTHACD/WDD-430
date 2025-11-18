@@ -4,53 +4,58 @@ import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { generatePagination } from '@/app/lib/utils';
+import { usePathname, useSearchParams } from 'next/navigation';
 
-export default function Pagination({ totalPages, currentPage, onPageChange }: {
-  totalPages: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-}) {
+export default function Pagination({ totalPages }: { totalPages: number }) {
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const currentPage = Number(searchParams.get('page')) || 1;
+
   const allPages = generatePagination(currentPage, totalPages);
 
-  const createPageURL = (page: number | string) => {
-    // No cambia la URL, solo llama a onPageChange
-    return '#';
+  const createPageURL = (pageNumber: number | string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set('page', pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
   };
 
   return (
-    <div className="inline-flex">
-      <PaginationArrow
-        direction="left"
-        href="#"
-        isDisabled={currentPage <= 1}
-        onClick={() => currentPage > 1 && onPageChange(currentPage - 1)}
-      />
-      <div className="flex -space-x-px">
-        {allPages.map((page, index) => {
-          let position: 'first' | 'last' | 'single' | 'middle' | undefined;
-          if (index === 0) position = 'first';
-          if (index === allPages.length - 1) position = 'last';
-          if (allPages.length === 1) position = 'single';
-          if (page === '...') position = 'middle';
-          return (
-            <PaginationNumber
-              key={`${page}-${index}`}
-              href="#"
-              page={page}
-              position={position}
-              isActive={currentPage === page}
-              onClick={() => typeof page === 'number' && onPageChange(page)}
-            />
-          );
-        })}
+    <>
+      <div className="inline-flex">
+        <PaginationArrow
+          direction="left"
+          href={createPageURL(currentPage - 1)}
+          isDisabled={currentPage <= 1}
+        />
+
+        <div className="flex -space-x-px">
+          {allPages.map((page, index) => {
+            let position: 'first' | 'last' | 'single' | 'middle' | undefined;
+
+            if (index === 0) position = 'first';
+            if (index === allPages.length - 1) position = 'last';
+            if (allPages.length === 1) position = 'single';
+            if (page === '...') position = 'middle';
+
+            return (
+              <PaginationNumber
+                key={`${page}-${index}`}
+                href={createPageURL(page)}
+                page={page}
+                position={position}
+                isActive={currentPage === page}
+              />
+            );
+          })}
+        </div>
+
+        <PaginationArrow
+          direction="right"
+          href={createPageURL(currentPage + 1)}
+          isDisabled={currentPage >= totalPages}
+        />
       </div>
-      <PaginationArrow
-        direction="right"
-        href="#"
-        isDisabled={currentPage >= totalPages}
-        onClick={() => currentPage < totalPages && onPageChange(currentPage + 1)}
-      />
-    </div>
+    </>
   );
 }
 
@@ -59,13 +64,11 @@ function PaginationNumber({
   href,
   isActive,
   position,
-  onClick,
 }: {
   page: number | string;
   href: string;
   position?: 'first' | 'last' | 'middle' | 'single';
   isActive: boolean;
-  onClick?: () => void;
 }) {
   const className = clsx(
     'flex h-10 w-10 items-center justify-center text-sm border',
@@ -81,9 +84,9 @@ function PaginationNumber({
   return isActive || position === 'middle' ? (
     <div className={className}>{page}</div>
   ) : (
-    <button className={className} onClick={onClick} type="button">
+    <Link href={href} className={className}>
       {page}
-    </button>
+    </Link>
   );
 }
 
@@ -91,12 +94,10 @@ function PaginationArrow({
   href,
   direction,
   isDisabled,
-  onClick,
 }: {
   href: string;
   direction: 'left' | 'right';
   isDisabled?: boolean;
-  onClick?: () => void;
 }) {
   const className = clsx(
     'flex h-10 w-10 items-center justify-center rounded-md border',
@@ -118,8 +119,8 @@ function PaginationArrow({
   return isDisabled ? (
     <div className={className}>{icon}</div>
   ) : (
-    <button className={className} onClick={onClick} type="button">
+    <Link className={className} href={href}>
       {icon}
-    </button>
+    </Link>
   );
 }
