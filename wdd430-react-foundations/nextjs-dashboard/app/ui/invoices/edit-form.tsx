@@ -10,7 +10,23 @@ import {
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
 import { updateInvoice, State } from '@/app/lib/actions';
-import { useActionState } from 'react';
+import { useState } from 'react';
+
+function useFormState(
+  action: (prevState: State, formData: FormData) => Promise<any>,
+  initialState: State,
+) {
+  const [state, setState] = useState<State>(initialState);
+
+  const dispatch = async (formData: FormData) => {
+    const result = await action(state, formData as any);
+    if (result && typeof result === 'object') {
+      setState((prev) => ({ ...prev, ...result }));
+    }
+  };
+
+  return [state, dispatch] as const;
+}
 
 export default function EditInvoiceForm({
   invoice,
