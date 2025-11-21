@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handcrafted Haven - Home</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Merriweather:wght@400;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* --- CSS Variables & Reset --- */
+        :root {
+            --primary: #3A5A40;
+            /* Forest Green */
+            --secondary: #C97C5D;
+            /* Terracotta */
+            --bg: #FBFBFB;
+            /* Off-White */
+            --surface: #FFFFFF;
+            /* Pure White for Cards */
+            --text-main: #333333;
+            /* Dark Charcoal */
+            --text-muted: #666666;
+            /* Readable Gray */
+            --border: #E5E5E5;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg);
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: 'Merriweather', serif;
+            color: var(--primary);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.2s;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* --- Components --- */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2a4230;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary);
+            color: white;
+        }
+
+        /* --- Navigation --- */
+        .navbar {
+            background-color: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Merriweather', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a:hover {
+            color: var(--secondary);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* --- Hero Section --- */
+        .hero {
+            padding: 80px 0;
+            background: linear-gradient(to right, #eef2f0, #fbfbfb);
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 40px;
+        }
+
+        /* --- Product Grid Section --- */
+        .section-title {
+            text-align: center;
+            margin: 60px 0 40px;
+            font-size: 2.5rem;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding-bottom: 80px;
+        }
+
+        /* --- Product Card --- */
+        .product-card {
+            background-color: var(--surface);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border);
+            transition: transform 0.2s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-image {
+            height: 250px;
+            background-color: #ddd;
+            position: relative;
+        }
+
+        /* Placeholder for images */
+        .card-image::before {
+            content: "Image Placeholder";
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            color: #888;
+            background-color: #eee;
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .category {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--secondary);
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+
+        .product-title {
+            font-size: 1.2rem;
+            margin: 5px 0;
+            font-family: 'Merriweather', serif;
+            color: var(--text-main);
+        }
+
+        .artisan {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+            margin-top: 10px;
+        }
+
+        .price {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .rating {
+            color: #FFC107;
+            /* Star color */
+            font-size: 0.9rem;
+        }
+
+        /* --- Footer --- */
+        .footer {
+            background-color: var(--primary);
+            color: white;
+            padding: 60px 0 20px;
+            text-align: center;
+        }
+
+        .footer h3 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="#" class="logo">Handcrafted Haven</a>
+            <ul class="nav-links">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">Browse Catalog</a></li>
+                <li><a href="#">Our Story</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="#" style="padding: 12px; color: var(--primary); font-weight: 500;">Log In</a>
+                <a href="#" class="btn btn-primary">Join as Artisan</a>
+            </div>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1>Discover Unique Handcrafted Treasures</h1>
+            <p>Connect directly with talented artisans and find sustainable, one-of-a-kind products made with passion
+                and care.</p>
+            <div style="display: flex; gap: 15px; justify-content: center;">
+                <a href="#" class="btn btn-primary">Shop Now</a>
+                <a href="#" class="btn btn-secondary">Meet the Artisans</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2 class="section-title">Featured Collections</h2>
+
+        <div class="product-grid">
+            <article class="product-card">
+                <div class="card-image" style="background-image: url('placeholder1.jpg')"></div>
+                <div class="card-content">
+                    <span class="category">Ceramics</span>
+                    <h3 class="product-title">Earthenware Vase</h3>
+                    <p class="artisan">by Maria Gomez</p>
+                    <div class="card-footer">
+                        <span class="price">$45.00</span>
+                        <span class="rating">★ 4.8 (24)</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="card-image"></div>
+                <div class="card-content">
+                    <span class="category">Textiles</span>
+                    <h3 class="product-title">Handwoven Scarf</h3>
+                    <p class="artisan">by The Wool Studio</p>
+                    <div class="card-footer">
+                        <span class="price">$32.00</span>
+                        <span class="rating">★ 5.0 (12)</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="card-image"></div>
+                <div class="card-content">
+                    <span class="category">Woodwork</span>
+                    <h3 class="product-title">Oak Cutting Board</h3>
+                    <p class="artisan">by Forest Crafts</p>
+                    <div class="card-footer">
+                        <span class="price">$60.00</span>
+                        <span class="rating">★ 4.9 (8)</span>
+                    </div>
+                </div>
+            </article>
+
+            <article class="product-card">
+                <div class="card-image"></div>
+                <div class="card-content">
+                    <span class="category">Jewelry</span>
+                    <h3 class="product-title">Silver Leaf Ring</h3>
+                    <p class="artisan">by Silver Soul</p>
+                    <div class="card-footer">
+                        <span class="price">$28.00</span>
+                        <span class="rating">★ 4.7 (40)</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <h3>Handcrafted Haven</h3>
+            <p>Supporting local artisans and sustainable consumption.</p>
+            <br>
+            <p>&copy; 2025 Handcrafted Haven. All rights reserved.</p>
+        </div>
+    </footer>
+
+</body>
+
+</html>
