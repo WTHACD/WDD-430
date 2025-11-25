@@ -1,20 +1,9 @@
+import Header from './components/Header';
+
 export default function HomePage() {
   return (
     <>
-      <nav className="navbar">
-        <div className="container nav-content">
-          <a href="#" className="logo">Handcrafted Haven</a>
-          <ul className="nav-links">
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Browse Catalog</a></li>
-            <li><a href="#">Our Story</a></li>
-          </ul>
-          <div className="nav-actions">
-            <a href="#" style={{ padding: '12px', color: 'var(--primary)', fontWeight: 500 }}>Log In</a>
-            <a href="#" className="btn btn-primary">Join as Artisan</a>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       <header className="hero">
         <div className="container">
