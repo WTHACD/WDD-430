@@ -1,10 +1,6 @@
-import Header from './components/Header';
-
 export default function HomePage() {
   return (
     <>
-      <Header />
-
       <header className="hero">
         <div className="container">
           <h1>Discover Unique Handcrafted Treasures</h1>
@@ -74,14 +70,7 @@ export default function HomePage() {
         </div>
       </main>
 
-      <footer className="footer">
-        <div className="container">
-          <h3>Handcrafted Haven</h3>
-          <p>Supporting local artisans and sustainable consumption.</p>
-          <br />
-          <p>&copy; 2025 Handcrafted Haven. All rights reserved.</p>
-        </div>
-      </footer>
+      {/* Footer is provided by root layout */}
     </>
   );
 }
