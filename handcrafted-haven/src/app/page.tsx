@@ -1,4 +1,18 @@
-export default function HomePage() {
+import { prisma } from '@/lib/db';
+import Link from 'next/link';
+
+function formatPrice(p: number) {
+  return `$${p.toFixed(2)}`;
+}
+
+export default async function HomePage() {
+  const products = await prisma.product.findMany({
+    where: { stock: { gt: 0 } },
+    include: { artisan: true, reviews: { select: { rating: true } } },
+    orderBy: { createdAt: 'desc' },
+    take: 24,
+  });
+
   return (
     <>
       <header className="hero">
@@ -6,71 +20,44 @@ export default function HomePage() {
           <h1>Discover Unique Handcrafted Treasures</h1>
           <p>Connect directly with talented artisans and find sustainable, one-of-a-kind products made with passion and care.</p>
           <div style={{ display: 'flex', gap: '15px', justifyContent: 'center' }}>
-            <a href="#" className="btn btn-primary">Shop Now</a>
-            <a href="#" className="btn btn-secondary">Meet the Artisans</a>
+            <Link href="/" className="btn btn-primary">Shop Now</Link>
+            <Link href="/our-story" className="btn btn-secondary">Meet the Artisans</Link>
           </div>
         </div>
       </header>
 
       <main className="container">
-        <h2 className="section-title">Featured Collections</h2>
+        <h2 className="section-title">Explore Products</h2>
 
         <div className="product-grid">
-          <article className="product-card">
-            <div className="card-image" style={{ backgroundImage: "url('placeholder1.jpg')" }}></div>
-            <div className="card-content">
-              <span className="category">Ceramics</span>
-              <h3 className="product-title">Earthenware Vase</h3>
-              <p className="artisan">by Maria Gomez</p>
-              <div className="card-footer">
-                <span className="price">$45.00</span>
-                <span className="rating">★ 4.8 (24)</span>
+          {products.map((p: any) => (
+            <article className="product-card" key={p.id}>
+              <div
+                className={p.images && p.images.length ? "card-image has-image" : "card-image"}
+                style={{ backgroundImage: p.images && p.images.length ? `url('${p.images[0]}')` : undefined }}
+              ></div>
+              <div className="card-content">
+                <span className="category">{p.category ?? 'Other'}</span>
+                <h3 className="product-title"><Link href={`/product/${p.id}`}>{p.name}</Link></h3>
+                <p className="artisan">by {p.artisan?.name ?? 'Unknown'}</p>
+                <div className="card-footer">
+                  <span className="price">{formatPrice(p.price)}</span>
+                  <span className="rating">
+                    {p.reviews && p.reviews.length ? (
+                      (() => {
+                        const avg = p.reviews.reduce((s: number, r: any) => s + (r.rating || 0), 0) / p.reviews.length;
+                        return `★ ${avg.toFixed(1)} (${p.reviews.length})`;
+                      })()
+                    ) : (
+                      'No reviews'
+                    )}
+                  </span>
+                </div>
               </div>
-            </div>
-          </article>
-
-          <article className="product-card">
-            <div className="card-image"></div>
-            <div className="card-content">
-              <span className="category">Textiles</span>
-              <h3 className="product-title">Handwoven Scarf</h3>
-              <p className="artisan">by The Wool Studio</p>
-              <div className="card-footer">
-                <span className="price">$32.00</span>
-                <span className="rating">★ 5.0 (12)</span>
-              </div>
-            </div>
-          </article>
-
-          <article className="product-card">
-            <div className="card-image"></div>
-            <div className="card-content">
-              <span className="category">Woodwork</span>
-              <h3 className="product-title">Oak Cutting Board</h3>
-              <p className="artisan">by Forest Crafts</p>
-              <div className="card-footer">
-                <span className="price">$60.00</span>
-                <span className="rating">★ 4.9 (8)</span>
-              </div>
-            </div>
-          </article>
-
-          <article className="product-card">
-            <div className="card-image"></div>
-            <div className="card-content">
-              <span className="category">Jewelry</span>
-              <h3 className="product-title">Silver Leaf Ring</h3>
-              <p className="artisan">by Silver Soul</p>
-              <div className="card-footer">
-                <span className="price">$28.00</span>
-                <span className="rating">★ 4.7 (40)</span>
-              </div>
-            </div>
-          </article>
+            </article>
+          ))}
         </div>
       </main>
-
-      {/* Footer is provided by root layout */}
     </>
   );
 }

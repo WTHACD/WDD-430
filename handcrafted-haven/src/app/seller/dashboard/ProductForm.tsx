@@ -7,6 +7,8 @@ export default function ProductForm() {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [category, setCategory] = useState('OTHER');
   const [stock, setStock] = useState('0');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -16,10 +18,13 @@ export default function ProductForm() {
     setLoading(true);
     setError(null);
     try {
+      const payload: any = { name, description, price, stock, category };
+      if (imageUrl) payload.imageUrl = imageUrl;
+
       const res = await fetch('/api/seller/product', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description, price, stock }),
+        body: JSON.stringify(payload),
       });
       const body = await res.json();
       if (!res.ok) {
@@ -27,7 +32,7 @@ export default function ProductForm() {
         setLoading(false);
         return;
       }
-      setName(''); setDescription(''); setPrice(''); setStock('0');
+      setName(''); setDescription(''); setPrice(''); setImageUrl(''); setCategory('OTHER'); setStock('0');
       setLoading(false);
       // refresh server-rendered data (no function passed from server)
       router.refresh();
@@ -45,7 +50,21 @@ export default function ProductForm() {
       </div>
       <div className="form-group">
         <label>Description</label>
-        <input className="input" value={description} onChange={e => setDescription(e.target.value)} />
+        <textarea className="input" value={description} onChange={e => setDescription(e.target.value)} rows={3} />
+      </div>
+      <div className="form-group">
+        <label>Image URL</label>
+        <input className="input" value={imageUrl} onChange={e => setImageUrl(e.target.value)} placeholder="https://example.com/photo.jpg" />
+      </div>
+      <div className="form-group">
+        <label>Category</label>
+        <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
+          <option value="JEWELRY">Jewelry</option>
+          <option value="HOME">Home</option>
+          <option value="APPAREL">Apparel</option>
+          <option value="ART">Art</option>
+          <option value="OTHER">Other</option>
+        </select>
       </div>
       <div className="form-group" style={{ display: 'flex', gap: 8 }}>
         <div style={{ flex: 1 }}>

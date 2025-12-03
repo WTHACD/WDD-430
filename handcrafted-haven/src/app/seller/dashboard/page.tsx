@@ -2,6 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import ProductForm from "./ProductForm";
+import ProductItem from "./ProductItem";
 
 export default async function SellerDashboard() {
   const session = (await getServerSession(authOptions as any)) as any;
@@ -27,11 +28,11 @@ export default async function SellerDashboard() {
         {products.length === 0 ? (
           <p>No products yet.</p>
         ) : (
-          <ul>
+          <div className="product-grid">
             {products.map((p) => (
-              <li key={p.id}>{p.name} — ${p.price} — stock {p.stock}</li>
+              <ProductItem key={p.id} product={p} />
             ))}
-          </ul>
+          </div>
         )}
       </div>
     </div>

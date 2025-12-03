@@ -10,19 +10,20 @@ export async function POST(req: Request) {
   }
   try {
     const body = await req.json();
-    const { name, description, price, category, stock } = body;
+    const { name, description, price, category, stock, imageUrl } = body;
     if (!name || price == null) {
       return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
     }
+    const images = Array.isArray(body.images) && body.images.length ? body.images : (imageUrl ? [String(imageUrl)] : []);
     const product = await prisma.product.create({
       data: {
         name,
         description: description || '',
-        price: parseFloat(price),
-        images: [],
+        price: parseFloat(String(price)),
+        images,
         category: category || 'OTHER',
         tags: [],
-        stock: parseInt(stock || '0'),
+        stock: parseInt(String(stock || '0')),
         artisan: { connect: { id: (session as any).user.id } },
       },
     });
