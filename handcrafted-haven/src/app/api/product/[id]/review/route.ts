@@ -61,7 +61,7 @@ export async function POST(req: Request, context: any) {
       const review = await prisma.review.create({
         data: {
           rating: parsedRating,
-          comment: safeComment || undefined,
+          comment: safeComment ?? '',
           product: { connect: { id: productId } },
           user: { connect: { id: userId } },
         },

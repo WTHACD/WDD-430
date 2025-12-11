@@ -32,6 +32,7 @@ model User {
   password    String
   address     String?
   avatar      String?   // URL to avatar image
+  bio         String?   // short biography / about
   role        UserRole  @default(USER)
   isVerified  Boolean   @default(false)
   createdAt   DateTime  @default(now())

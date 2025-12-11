@@ -2,6 +2,9 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import Link from 'next/link';
 import SignOutButton from '@/app/components/SignOutButton';
+import { prisma } from '@/lib/db';
+import EditBio from '@/app/components/EditBio';
+import BioSection from '@/app/components/BioSection';
 
 export default async function ProfilePage() {
   const session = (await getServerSession(authOptions as any)) as any;
@@ -18,14 +21,16 @@ export default async function ProfilePage() {
   }
 
   const user = session.user;
+  // fetch full user record to get `bio` and avatar from the DB
+  const dbUser = await prisma.user.findUnique({ where: { id: user.id as string }, select: { id: true, bio: true, avatar: true } as any });
 
   return (
     <div className="container" style={{ padding: 24 }}>
       <h1>Profile</h1>
       <div style={{ display: 'flex', gap: 16, alignItems: 'center', marginTop: 12 }}>
-        {user.image ? (
+        {dbUser?.avatar ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={user.image} alt={user.name || 'avatar'} style={{ width: 96, height: 96, borderRadius: 12 }} />
+          <img src={dbUser.avatar} alt={user.name || 'avatar'} style={{ width: 96, height: 96, borderRadius: 12 }} />
         ) : (
           <div style={{ width: 96, height: 96, borderRadius: 12, background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28 }}>{(user?.name || user?.email || 'U')[0]}</div>
         )}
@@ -39,6 +44,12 @@ export default async function ProfilePage() {
               <Link href="/seller/dashboard" style={{ marginLeft: 12 }} className="btn">Manage shop</Link>
             )}
           </div>
+        </div>
+      </div>
+      <div style={{ marginTop: 20 }}>
+        <h3>About / Biography</h3>
+        <div style={{ marginTop: 12 }}>
+          <BioSection artisanId={user.id as string} initialBio={dbUser?.bio ?? ''} />
         </div>
       </div>
     </div>

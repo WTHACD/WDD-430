@@ -47,10 +47,12 @@ export default function Header({ user }: { user?: any | null }) {
                 ) : (
                   <div style={{ width: 36, height: 36, borderRadius: 999, background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{(effectiveUser?.name || effectiveUser?.email || 'U')[0]}</div>
                 )}
-                <div style={{ display: 'flex', flexDirection: 'column', minWidth: 140 }}>
-                  <span style={{ fontWeight: 600 }}>{effectiveUser?.name ?? effectiveUser?.email}</span>
-                  <span style={{ fontSize: 12, color: '#666' }}>{effectiveUser?.role ?? ''}</span>
-                </div>
+                <Link href="/profile" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', minWidth: 140, cursor: 'pointer' }}>
+                    <span style={{ fontWeight: 600 }}>{effectiveUser?.name ?? effectiveUser?.email}</span>
+                    <span style={{ fontSize: 12, color: '#666' }}>{effectiveUser?.role ?? ''}</span>
+                  </div>
+                </Link>
                 <SignOutButton />
               </div>
             )}
