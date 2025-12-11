@@ -59,11 +59,11 @@ export default async function ProductsPage({ searchParams }: any) {
   const lastPage = Math.max(1, Math.ceil(total / limit));
   return (
     <main className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '24px 0' }}>
-        <h1>Products</h1>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '24px 0', gap: 12, flexWrap: 'wrap' }}>
+        <h1 style={{ margin: 0 }}>Products</h1>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', minWidth: 0 }}>
           <SearchBox defaultValue={q} />
-          <div>
+          <div style={{ flex: '0 0 auto' }}>
             <Link href="/">Back home</Link>
           </div>
         </div>
