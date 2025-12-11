@@ -27,12 +27,12 @@ export default async function ProductPage({ params }: any) {
     : null;
 
   return (
-    <div className="container" style={{ padding: 24 }}>
-      <div style={{ display: 'flex', gap: 24, alignItems: 'flex-start' }}>
-        <div style={{ flex: '0 0 420px' }}>
+    <div className="container product-page" style={{ padding: 24 }}>
+      <div className="product-detail">
+        <div className="product-image">
           <div className={product.images && product.images.length ? 'card-image has-image' : 'card-image'} style={{ backgroundImage: product.images && product.images.length ? `url('${product.images[0]}')` : undefined }} />
         </div>
-        <div style={{ flex: 1 }}>
+        <div className="product-info">
           <h1 style={{ marginBottom: 8 }}>{product.name}</h1>
           <div style={{ display: 'flex', gap: 12, alignItems: 'center', marginBottom: 12 }}>
             <div style={{ fontWeight: 700, fontSize: 20 }}>{formatPrice(product.price)}</div>

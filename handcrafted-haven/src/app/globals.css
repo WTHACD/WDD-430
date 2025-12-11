@@ -152,9 +152,43 @@ img {
 
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* Use min() so the min column size never exceeds the container width on very small viewports */
+    grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
     gap: 30px;
     padding-bottom: 80px;
+}
+
+/* --- Product detail (responsive) --- */
+.product-page .product-detail {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+}
+
+.product-page .product-image {
+    flex: 0 0 420px;
+}
+
+.product-page .product-info {
+    flex: 1 1 0;
+}
+
+@media (max-width: 768px) {
+    .product-page .product-detail {
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .product-page .product-image {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+
+    .product-page .card-image {
+        height: auto;
+        aspect-ratio: 4/3;
+        width: 100%;
+    }
 }
 
 /* --- Product Card --- */

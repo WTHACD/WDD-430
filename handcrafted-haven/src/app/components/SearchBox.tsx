@@ -30,7 +30,7 @@ export default function SearchBox({ defaultValue = '' }: { defaultValue?: string
   }
 
   return (
-    <div style={{ display: 'flex', gap: 8, alignItems: 'center', minWidth: 0 }}>
+    <div style={{ display: 'flex', gap: 8, alignItems: 'center', minWidth: 0, flexWrap: 'nowrap' }}>
       <input
         aria-label="Search products"
         placeholder="Search products..."
@@ -39,7 +39,7 @@ export default function SearchBox({ defaultValue = '' }: { defaultValue?: string
           setValue(e.target.value);
           scheduleUpdate(e.target.value.trim());
         }}
-        style={{ padding: '8px 10px', borderRadius: 6, border: '1px solid #ddd', minWidth: 0, flex: '1 1 auto', width: '200px', maxWidth: '40vw' }}
+        style={{ padding: '8px 10px', borderRadius: 6, border: '1px solid #ddd', minWidth: 0, flex: '1 1 0', width: '100%', maxWidth: '360px' }}
       />
       <button
         type="button"

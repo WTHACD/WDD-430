@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { CATEGORIES, formatCategory } from '@/lib/categories';
 
 export default function ProductForm() {
   const router = useRouter();
@@ -59,11 +60,10 @@ export default function ProductForm() {
       <div className="form-group">
         <label>Category</label>
         <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
-          <option value="JEWELRY">Jewelry</option>
-          <option value="HOME">Home</option>
-          <option value="APPAREL">Apparel</option>
-          <option value="ART">Art</option>
-          <option value="OTHER">Other</option>
+            {/** Use shared categories list so filters and dashboard stay in sync */}
+            {CATEGORIES.map((c) => (
+              <option key={c} value={c}>{formatCategory(c)}</option>
+            ))}
         </select>
       </div>
       <div className="form-group" style={{ display: 'flex', gap: 8 }}>

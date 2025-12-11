@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { CATEGORIES, formatCategory } from '@/lib/categories';
 
 export default function ProductItem({ product }: { product: any }) {
   const router = useRouter();
@@ -18,7 +19,16 @@ export default function ProductItem({ product }: { product: any }) {
     if (!confirm('Delete this product?')) return;
     setLoading(true);
     try {
-      const res = await fetch(`/api/seller/product/${product.id}`, { method: 'DELETE' });
+      // Debug: log product id and request URL
+      // eslint-disable-next-line no-console
+      console.log('Attempting DELETE for product.id =', product.id);
+      const encodedId = encodeURIComponent(String(product.id));
+      const url = `/api/seller/product/${encodedId}`;
+      // eslint-disable-next-line no-console
+      console.log('DELETE request URL:', url);
+      const res = await fetch(url, { method: 'DELETE' });
+      // eslint-disable-next-line no-console
+      console.log('DELETE response status:', res.status);
       if (!res.ok) throw new Error('Delete failed');
       router.refresh();
     } catch (err: any) {
@@ -61,7 +71,7 @@ export default function ProductItem({ product }: { product: any }) {
       <div className="card-content">
         {!editing ? (
           <>
-            <span className="category">{product.category}</span>
+            <span className="category">{formatCategory(product.category)}</span>
             <h3 className="product-title">{product.name}</h3>
             <p className="artisan">by {product.artisan?.name ?? 'You'}</p>
             <div className="card-footer">
@@ -96,6 +106,14 @@ export default function ProductItem({ product }: { product: any }) {
             <div className="form-group">
               <label>Image URL</label>
               <input className="input" value={imageUrl} onChange={e => setImageUrl(e.target.value)} />
+            </div>
+            <div className="form-group">
+              <label>Category</label>
+              <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
+                {CATEGORIES.map((c) => (
+                  <option key={c} value={c}>{c.charAt(0) + c.slice(1).toLowerCase()}</option>
+                ))}
+              </select>
             </div>
             <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
               <button className="btn btn-primary" type="submit" disabled={loading}>{loading ? 'Saving...' : 'Save'}</button>

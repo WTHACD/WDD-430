@@ -1,7 +1,9 @@
 import { prisma } from '@/lib/db';
+import { CATEGORIES } from '@/lib/categories';
 import ProductCard from '@/app/components/ProductCard';
 import Link from 'next/link';
 import SearchBox from '@/app/components/SearchBox';
+import Filters from '@/app/components/Filters';
 
 export default async function ProductsPage({ searchParams }: any) {
   // In some Next.js environments `searchParams` may be a Promise — await it first.
@@ -18,6 +20,12 @@ export default async function ProductsPage({ searchParams }: any) {
       { name: { contains: q, mode: 'insensitive' } },
       { description: { contains: q, mode: 'insensitive' } },
     ];
+  }
+
+  // Category filter
+  const category = typeof resolvedSearchParams?.category === 'string' ? resolvedSearchParams?.category : '';
+  if (category) {
+    where.category = category;
   }
 
   // DEBUG: log incoming search param to server console
@@ -41,6 +49,9 @@ export default async function ProductsPage({ searchParams }: any) {
 
   const total = await prisma.product.count({ where: { stock: { gt: 0 } } });
 
+  // use shared category list (keeps dashboard/product form and filters consistent)
+  const categories = CATEGORIES;
+
   const items = products.map((p) => {
     const avg = p.reviews && p.reviews.length ? p.reviews.reduce((s, r) => s + (r.rating || 0), 0) / p.reviews.length : null;
     return {
@@ -61,12 +72,13 @@ export default async function ProductsPage({ searchParams }: any) {
     <main className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', margin: '24px 0', gap: 12, flexWrap: 'wrap' }}>
         <h1 style={{ margin: 0 }}>Products</h1>
-        <div style={{ display: 'flex', gap: 12, alignItems: 'center', minWidth: 0 }}>
-          <SearchBox defaultValue={q} />
-          <div style={{ flex: '0 0 auto' }}>
-            <Link href="/">Back home</Link>
+        <div style={{ display: 'flex', gap: 12, alignItems: 'center', minWidth: 0, flexWrap: 'wrap' }}>
+            <SearchBox defaultValue={q} />
+            <Filters categories={categories} defaultCategory={category} />
+            <div style={{ flex: '0 0 auto' }}>
+              <Link href="/">Back home</Link>
+            </div>
           </div>
-        </div>
       </div>
 
       <div className="product-grid">
