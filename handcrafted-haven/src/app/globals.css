@@ -173,7 +173,7 @@ img {
 }
 
 .card-image {
-    height: 220px;
+    aspect-ratio: 4/3;
     background-color: #ddd;
     position: relative;
     background-size: cover;
@@ -209,12 +209,12 @@ img {
     padding: 16px;
 }
 
-/* Make product card a fixed-height column so image area doesn't grow */
 .product-card {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: 380px;
+    height: auto;
+    min-height: 320px;
 }
 
 .card-content {
@@ -297,6 +297,21 @@ img {
     cursor: pointer;
     flex-direction: column;
     gap: 4px;
+    background: transparent;
+    border: none;
+    padding: 6px;
+    -webkit-appearance: none;
+    align-items: center;
+}
+
+/* Remove default focus border but keep an accessible focus ring */
+.hamburger:focus {
+    outline: none;
+}
+
+.hamburger:focus-visible {
+    box-shadow: 0 0 0 4px rgba(59,130,246,0.15);
+    border-radius: 8px;
 }
 
 .hamburger .line {

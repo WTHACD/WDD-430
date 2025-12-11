@@ -1,10 +1,11 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/react';
 import SignOutButton from './SignOutButton';
+import { useRouter } from 'next/navigation';
 
 export default function Header({ user }: { user?: any | null }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,18 +16,58 @@ export default function Header({ user }: { user?: any | null }) {
   const isAuthed = !!effectiveUser;
   const isArtisan = effectiveUser?.role === 'ARTISAN' || effectiveUser?.role === 'artisan';
 
+  const router = useRouter();
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    function onDocClick(e: MouseEvent) {
+      const target = e.target as Node;
+      if (!containerRef.current) return;
+      if (containerRef.current.contains(target)) return; // inside menu
+      if (buttonRef.current && buttonRef.current.contains(target)) return; // clicked hamburger
+      setIsMenuOpen(false);
+    }
+
+    function onEsc(e: KeyboardEvent) {
+      if (e.key === 'Escape') setIsMenuOpen(false);
+    }
+
+    document.addEventListener('click', onDocClick);
+    document.addEventListener('keydown', onEsc);
+    return () => {
+      document.removeEventListener('click', onDocClick);
+      document.removeEventListener('keydown', onEsc);
+    };
+  }, []);
+
+  // Close menu on navigation
+  useEffect(() => {
+    // next/navigation's router doesn't expose events in the same way as next/router
+    // so we use a simple approach: whenever location pathname changes, close menu.
+    const onRoute = () => setIsMenuOpen(false);
+    window.addEventListener('popstate', onRoute);
+    return () => window.removeEventListener('popstate', onRoute);
+  }, []);
+
   return (
     <nav className="navbar">
       <div className="container nav-content">
         <Link href="/" className="logo">Handcrafted Haven</Link>
 
-        <div className="hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+        <button
+          ref={buttonRef}
+          className="hamburger"
+          aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={isMenuOpen}
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
           <div className="line"></div>
           <div className="line"></div>
           <div className="line"></div>
-        </div>
+        </button>
 
-        <div className={`nav-links-container ${isMenuOpen ? 'open' : ''}`}>
+        <div ref={containerRef} className={`nav-links-container ${isMenuOpen ? 'open' : ''}`}>
           <ul className="nav-links">
             <li><Link href="/">Home</Link></li>
             <li><Link href="/browse">Browse Catalog</Link></li>

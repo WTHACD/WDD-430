@@ -32,6 +32,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" className={`${inter.variable} ${merriweather.variable}`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
       <body className={inter.className}>
         <SessionProviderClient session={session}>
           <Header user={session?.user ?? null} />
